@@ -1,72 +1,143 @@
 # DevOps College Website
 
-A responsive college website created for **Case Study 4: Project Sharing Using GitHub**. The project demonstrates how a local web project can be tracked with Git, connected to a GitHub remote repository, and shared with team members using `git push`.
+[![CI/CD Pipeline](https://github.com/Prathameshswami2722/DevOps-College-Website/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/Prathameshswami2722/DevOps-College-Website/actions/workflows/ci-cd.yml)
+[![CodeQL](https://github.com/Prathameshswami2722/DevOps-College-Website/actions/workflows/codeql.yml/badge.svg)](https://github.com/Prathameshswami2722/DevOps-College-Website/actions/workflows/codeql.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## Project objective
+An examination-ready implementation of **Case Study 4: Project Sharing Using GitHub**. It uses a real, data-driven college website to demonstrate source control, team collaboration, automated quality gates, containerisation, continuous deployment, security scanning and monitoring.
 
-The fictional **Asteria College** website gives prospective students a polished overview of the college, its programmes, campus experience, admissions and contact information.
+> Asteria College is fictional. The repository is an academic DevOps demonstration, not a production college service.
 
-## Features
+## What makes this a DevOps project?
 
-- Responsive layout for desktop, tablet and mobile
-- Accessible navigation with a mobile menu and skip link
-- Programme, campus and admissions sections
-- Lightweight scroll-reveal animations with reduced-motion support
-- Built with plain HTML, CSS and JavaScript—no installation required
+The website is the product being delivered; the assessed work is the repeatable delivery system around it.
 
-## Technologies used
+```text
+Developer -> Git branch -> Pull request -> CI tests -> Docker build -> GitHub Pages
+                                          \-> CodeQL and dependency checks
+Container -> /health -> Blackbox Exporter -> Prometheus -> availability alert
+```
 
-- HTML5
-- CSS3
-- JavaScript
-- Git and GitHub
+| Capability | Implementation |
+| --- | --- |
+| Version control | Git repository, meaningful commits and GitHub remote |
+| Collaboration | Feature branches, issues, PR template, CODEOWNERS and contribution rules |
+| Continuous integration | GitHub Actions validation, tests, build and dependency audit |
+| Continuous delivery | Automatic GitHub Pages deployment from a successful `main` pipeline |
+| Containerisation | Multi-stage Dockerfile with an unprivileged Nginx runtime |
+| Security | CodeQL, Dependabot, least-privilege workflow permissions and HTTP headers |
+| Reliability | Health endpoint, Docker health check and immutable release metadata |
+| Monitoring | Prometheus and Blackbox Exporter with an availability alert |
 
-## Run the project
+## Application features
 
-Clone the repository and open `index.html` in a browser:
+- Responsive and accessible college website
+- Programmes loaded from version-controlled JSON instead of duplicated HTML
+- Release identifier generated from the Git commit during each build
+- `/health` endpoint for container and monitoring probes
+- Graceful error state when programme data cannot be loaded
+- No framework or runtime dependency required in the browser
+
+## CI/CD pipeline
+
+Every push to `main` or `develop` and every pull request to `main` triggers:
+
+1. Checkout and deterministic `npm ci` installation.
+2. Repository, HTML-anchor and JSON validation.
+3. Automated tests with Node's built-in test runner.
+4. A production build into `dist/` with commit-based release metadata.
+5. Production dependency audit.
+6. Multi-stage Docker image build.
+7. GitHub Pages deployment only from `main`, only after all preceding jobs pass.
+
+CodeQL runs separately on pushes, pull requests and a weekly schedule. Dependabot checks npm, Docker and GitHub Actions dependencies weekly.
+
+## Run locally
+
+Requirements: Node.js 20+ and npm.
 
 ```bash
 git clone https://github.com/Prathameshswami2722/DevOps-College-Website.git
 cd DevOps-College-Website
-open index.html
+npm ci
+npm run ci
+npm run serve
 ```
 
-Alternatively, start a local server:
+Open `http://127.0.0.1:8080`.
+
+Useful commands:
 
 ```bash
-python3 -m http.server 8000
+make check       # Validate repository and application structure
+make test        # Run automated tests
+make build       # Generate production dist/
+make run         # Start the source-mode development server
+make docker      # Build and run the production container
+make monitoring  # Run website + Blackbox Exporter + Prometheus
 ```
 
-Then visit `http://localhost:8000`.
-
-## GitHub workflow used
+## Run with Docker
 
 ```bash
-git init
+docker compose up --build website
+```
+
+- Website: `http://localhost:8080`
+- Health check: `http://localhost:8080/health`
+
+To start observability as well:
+
+```bash
+docker compose --profile monitoring up --build
+```
+
+- Prometheus: `http://localhost:9090`
+- Blackbox Exporter: `http://localhost:9115`
+
+## GitHub workflow for the student team
+
+```bash
+git switch -c feature/my-change
+# edit files
+npm run ci
 git add .
-git commit -m "Initial commit: add college website"
-git branch -M main
+git commit -m "feat: describe the change"
+git push -u origin feature/my-change
+```
+
+Open a pull request, wait for required checks, request review and merge only when the pipeline is green. See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Repository structure
+
+```text
+.
+├── .github/                 # CI/CD, CodeQL, Dependabot, issue and PR templates
+├── data/                    # Version-controlled application data
+├── docs/                    # Architecture and examination evidence guide
+├── monitoring/              # Prometheus, Blackbox and alert configuration
+├── scripts/                 # Build, validation and local-server automation
+├── tests/                   # Automated application/repository tests
+├── Dockerfile               # Reproducible production image
+├── compose.yaml             # App and optional monitoring stack
+├── nginx.conf               # Hardened container web server
+├── package.json             # Standard automation entry points
+├── index.html               # Application document
+├── style.css                # Responsive visual system
+└── script.js                # Data loading and interaction logic
+```
+
+## Case-study evidence
+
+The required repository name is `DevOps-College-Website`. The local repository is connected with:
+
+```bash
 git remote add origin https://github.com/Prathameshswami2722/DevOps-College-Website.git
 git push -u origin main
 ```
 
-## Suggested screenshots for the practical record
+Use [docs/EXAMINATION-GUIDE.md](docs/EXAMINATION-GUIDE.md) for the exact demonstration sequence, screenshot checklist, requirement mapping and viva answers. The architecture is explained in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
-1. The GitHub repository home page showing the project files and README.
-2. The repository **Commits** page showing the initial commit.
-3. The local website running in a browser.
-4. The terminal after a successful `git push`.
+## License
 
-## Project structure
-
-```text
-DevOps-College-Website/
-├── screenshots/
-│   └── website-home.png
-├── index.html
-├── style.css
-├── script.js
-└── README.md
-```
-
-> Note: Asteria College is a fictional institution created for this academic demonstration.
+This academic project is available under the [MIT License](LICENSE).
