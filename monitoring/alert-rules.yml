@@ -1,0 +1,11 @@
+groups:
+  - name: website-availability
+    rules:
+      - alert: CollegeWebsiteDown
+        expr: probe_success == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: Asteria College website is unavailable
+          description: The HTTP health probe has failed for more than one minute.
