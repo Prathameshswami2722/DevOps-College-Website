@@ -1,0 +1,23 @@
+[
+  {
+    "id": "bsc-computer-science",
+    "name": "Computer Science",
+    "description": "Software engineering, data, cloud technologies and intelligent systems.",
+    "icon": "⌘",
+    "featured": false
+  },
+  {
+    "id": "bba-management",
+    "name": "Business & Management",
+    "description": "Strategy, entrepreneurship and leadership for a changing economy.",
+    "icon": "◈",
+    "featured": true
+  },
+  {
+    "id": "ba-design-media",
+    "name": "Design & Media",
+    "description": "Human-centred design, visual communication and digital storytelling.",
+    "icon": "✎",
+    "featured": false
+  }
+]
