@@ -28,8 +28,9 @@ const elements = {
 };
 
 const fetchJson = async (url) => {
-  const response = await fetch(url, {
-    headers: url.startsWith('https://api.github.com')
+  const requestUrl = new URL(url, window.location.href);
+  const response = await fetch(requestUrl, {
+    headers: requestUrl.origin === 'https://api.github.com'
       ? { Accept: 'application/vnd.github+json' }
       : {}
   });

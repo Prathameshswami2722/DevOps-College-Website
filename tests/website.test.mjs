@@ -29,13 +29,18 @@ test('health document describes a healthy service', async () => {
 });
 
 test('DevOps dashboard exposes live delivery and operations views', async () => {
-  const [html, script] = await Promise.all([read('devops.html'), read('devops.js')]);
+  const [html, script, dockerfile] = await Promise.all([
+    read('devops.html'),
+    read('devops.js'),
+    read('Dockerfile')
+  ]);
   assert.match(html, /id="pipeline-stages"/);
   assert.match(html, /id="commit-list"/);
   assert.match(html, /id="environment-grid"/);
   assert.match(script, /api\.github\.com/);
   assert.match(script, /actions\/runs/);
   assert.match(script, /build-info\.json/);
+  assert.match(dockerfile, /devops\.html devops\.css devops\.js/);
 });
 
 test('CI/CD workflow includes test, container and deployment stages', async () => {

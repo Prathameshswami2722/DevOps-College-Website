@@ -2,7 +2,7 @@ FROM node:26-alpine AS build
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
-COPY index.html style.css script.js health.json ./
+COPY index.html style.css script.js devops.html devops.css devops.js health.json ./
 COPY data ./data
 COPY scripts ./scripts
 RUN npm run build
