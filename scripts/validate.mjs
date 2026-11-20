@@ -4,6 +4,9 @@ const requiredFiles = [
   'index.html',
   'style.css',
   'script.js',
+  'devops.html',
+  'devops.css',
+  'devops.js',
   'data/programmes.json',
   'health.json',
   'Dockerfile',
@@ -20,6 +23,7 @@ for (const file of requiredFiles) {
 }
 
 const html = await readFile('index.html', 'utf8');
+const dashboardHtml = await readFile('devops.html', 'utf8');
 const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((match) => match[1]);
 const duplicateIds = ids.filter((id, index) => ids.indexOf(id) !== index);
 if (duplicateIds.length) errors.push(`Duplicate HTML IDs: ${[...new Set(duplicateIds)].join(', ')}`);
@@ -38,6 +42,9 @@ for (const jsonFile of ['data/programmes.json', 'health.json']) {
 
 if (!html.includes('<meta name="viewport"')) errors.push('Missing responsive viewport meta tag');
 if (!html.includes('class="skip-link"')) errors.push('Missing accessibility skip link');
+if (!dashboardHtml.includes('id="pipeline-stages"')) errors.push('DevOps dashboard is missing the pipeline visualization');
+if (!dashboardHtml.includes('id="commit-list"')) errors.push('DevOps dashboard is missing commit history');
+if (!dashboardHtml.includes('id="refresh-dashboard"')) errors.push('DevOps dashboard is missing live refresh control');
 
 if (errors.length) {
   console.error(errors.map((error) => `✗ ${error}`).join('\n'));

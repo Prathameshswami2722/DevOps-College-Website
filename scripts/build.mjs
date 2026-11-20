@@ -2,7 +2,15 @@ import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { basename, join } from 'node:path';
 
 const outputDirectory = 'dist';
-const sourceFiles = ['index.html', 'style.css', 'script.js', 'health.json'];
+const sourceFiles = [
+  'index.html',
+  'style.css',
+  'script.js',
+  'devops.html',
+  'devops.css',
+  'devops.js',
+  'health.json'
+];
 
 await rm(outputDirectory, { recursive: true, force: true });
 await mkdir(outputDirectory, { recursive: true });

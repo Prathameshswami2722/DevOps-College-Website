@@ -15,10 +15,12 @@
 1. Show the repository file list and README on GitHub.
 2. Show `git log --oneline --graph --all` and explain the local/remote relationship.
 3. Open the Actions tab and show the quality, container and deployment jobs.
-4. Open the deployed GitHub Pages URL and point out the commit-based release in the footer.
-5. Run `docker compose up --build website`, then open `http://localhost:8080/health`.
-6. Explain that a failed test blocks both the container and deployment stages.
-7. Show the Issues/PR templates and explain team collaboration.
+4. Open `/devops.html` and show that the dashboard reads the real pipeline, release, commit and PR data.
+5. Open the college application and explain that it is the workload delivered by the pipeline.
+6. Run `docker compose up --build website`, then open `http://localhost:8080/health`.
+7. Explain that a failed test blocks both the container and deployment stages.
+8. Show the dashboard architecture, security, monitoring and runbook sections.
+9. Show the Issues/PR templates and explain team collaboration.
 
 ## Screenshots to capture
 
@@ -44,3 +46,7 @@ Store evidence in `screenshots/github/`:
 **What happens when a test fails?** The quality job fails; dependent container and deployment jobs do not run.
 
 **How is the site monitored?** Blackbox Exporter probes the health endpoint and Prometheus records availability and evaluates an alert rule.
+
+**Why is there an operations dashboard?** It converts repository and runtime evidence into a live operational view. It reads GitHub Actions, commits and pull requests through the public GitHub API and checks the deployed health and build metadata endpoints.
+
+**Is the dashboard itself the monitoring system?** No. It is the demonstration and control surface. Prometheus and Blackbox Exporter are the container monitoring system; GitHub Actions is the delivery automation system.
