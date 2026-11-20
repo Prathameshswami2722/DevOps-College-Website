@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Live DevOps operations dashboard for the Asteria College delivery pipeline.">
+  <title>DevOps Operations | Asteria College</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="devops.css">
+  <script src="devops.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#dashboard-main">Skip to dashboard</a>
+
+  <header class="ops-header">
+    <a class="ops-brand" href="devops.html" aria-label="Asteria DevOps operations home">
+      <span class="ops-logo" aria-hidden="true">A</span>
+      <span><strong>Asteria Ops</strong><small>Delivery control plane</small></span>
+    </a>
+
+    <div class="header-actions">
+      <span class="live-indicator"><span class="pulse" aria-hidden="true"></span>Live GitHub data</span>
+      <button class="refresh-button" id="refresh-dashboard" type="button">
+        <span aria-hidden="true">↻</span> Refresh
+      </button>
+      <a class="app-link" href="index.html">College website</a>
+    </div>
+  </header>
+
+  <div class="ops-layout">
+    <aside class="sidebar" aria-label="Dashboard navigation">
+      <nav>
+        <p class="nav-label">Operate</p>
+        <a class="active" href="#overview"><span aria-hidden="true">▦</span> Overview</a>
+        <a href="#pipeline"><span aria-hidden="true">◇</span> Delivery pipeline</a>
+        <a href="#environments"><span aria-hidden="true">⊙</span> Environments</a>
+        <a href="#changes"><span aria-hidden="true">⎇</span> Change history</a>
+        <p class="nav-label">Reliability</p>
+        <a href="#observability"><span aria-hidden="true">◉</span> Observability</a>
+        <a href="#security"><span aria-hidden="true">◈</span> Security controls</a>
+        <a href="#runbook"><span aria-hidden="true">≡</span> Runbook</a>
+      </nav>
+
+      <div class="repo-card">
+        <span class="repo-icon" aria-hidden="true">GH</span>
+        <div>
+          <small>Source repository</small>
+          <strong>DevOps-College-Website</strong>
+        </div>
+        <a href="https://github.com/Prathameshswami2722/DevOps-College-Website" target="_blank" rel="noreferrer">Open GitHub</a>
+      </div>
+    </aside>
+
+    <main id="dashboard-main">
+      <section class="dashboard-hero" id="overview">
+        <div>
+          <p class="kicker">Production operations</p>
+          <h1>Delivery health at a glance.</h1>
+          <p>This dashboard reads the public GitHub API and the deployed application endpoints, turning the repository into a live DevOps demonstration.</p>
+        </div>
+        <div class="sync-meta">
+          <span>Last synchronized</span>
+          <strong id="last-updated">Connecting…</strong>
+          <small id="api-message" role="status" aria-live="polite">Requesting current repository state</small>
+        </div>
+      </section>
+
+      <section class="metric-grid" aria-label="Current delivery metrics">
+        <article class="metric-card accent-green">
+          <div class="metric-top"><span>Production</span><span class="status-pill neutral" id="production-pill">Checking</span></div>
+          <strong class="metric-value" id="production-status">—</strong>
+          <p id="production-detail">Probing the deployed health endpoint</p>
+        </article>
+        <article class="metric-card accent-blue">
+          <div class="metric-top"><span>Latest pipeline</span><span class="status-pill neutral" id="pipeline-pill">Checking</span></div>
+          <strong class="metric-value" id="pipeline-status">—</strong>
+          <p id="pipeline-detail">Reading GitHub Actions</p>
+        </article>
+        <article class="metric-card accent-violet">
+          <div class="metric-top"><span>Release</span><span class="mono-tag">main</span></div>
+          <strong class="metric-value mono" id="release-version">—</strong>
+          <p id="release-detail">Loading immutable build metadata</p>
+        </article>
+        <article class="metric-card accent-orange">
+          <div class="metric-top"><span>Open pull requests</span><span class="status-pill neutral">GitHub</span></div>
+          <strong class="metric-value" id="open-prs">—</strong>
+          <p>Pending changes waiting for review or merge</p>
+        </article>
+      </section>
+
+      <section class="panel pipeline-panel" id="pipeline">
+        <div class="panel-heading">
+          <div>
+            <p class="kicker">Continuous integration and delivery</p>
+            <h2>Latest main-branch pipeline</h2>
+          </div>
+          <a id="workflow-link" class="secondary-link" href="https://github.com/Prathameshswami2722/DevOps-College-Website/actions" target="_blank" rel="noreferrer">View Actions run</a>
+        </div>
+        <div class="pipeline-summary">
+          <div><small>Trigger</small><strong id="run-trigger">—</strong></div>
+          <div><small>Commit</small><strong class="mono" id="run-commit">—</strong></div>
+          <div><small>Started</small><strong id="run-started">—</strong></div>
+          <div><small>Total duration</small><strong id="run-duration">—</strong></div>
+        </div>
+        <div class="pipeline-stages" id="pipeline-stages" aria-live="polite">
+          <div class="stage loading"><span class="stage-icon">·</span><div><strong>Connecting to GitHub Actions</strong><small>Waiting for job data</small></div></div>
+        </div>
+      </section>
+
+      <section class="two-column" id="environments">
+        <article class="panel">
+          <div class="panel-heading compact">
+            <div><p class="kicker">Release targets</p><h2>Environments</h2></div>
+          </div>
+          <div class="environment-grid" id="environment-grid">
+            <div class="environment-row">
+              <div class="environment-name"><span class="env-icon production">P</span><div><strong>Production</strong><small>GitHub Pages</small></div></div>
+              <div><small>Deployment</small><strong id="prod-deployment">Checking</strong></div>
+              <div><small>Release</small><strong class="mono" id="prod-release">—</strong></div>
+              <a href="https://prathameshswami2722.github.io/DevOps-College-Website/" target="_blank" rel="noreferrer">Open</a>
+            </div>
+            <div class="environment-row">
+              <div class="environment-name"><span class="env-icon container">D</span><div><strong>Container</strong><small>Nginx, port 8080</small></div></div>
+              <div><small>Runtime</small><strong>Docker</strong></div>
+              <div><small>Health</small><strong>Built-in probe</strong></div>
+              <span class="config-badge">Configured</span>
+            </div>
+            <div class="environment-row">
+              <div class="environment-name"><span class="env-icon local">L</span><div><strong>Local</strong><small>Developer workstation</small></div></div>
+              <div><small>Command</small><strong class="mono">npm run serve</strong></div>
+              <div><small>Quality gate</small><strong class="mono">npm run ci</strong></div>
+              <span class="config-badge">On demand</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel" id="changes">
+          <div class="panel-heading compact">
+            <div><p class="kicker">Version control</p><h2>Recent changes</h2></div>
+            <a class="secondary-link" href="https://github.com/Prathameshswami2722/DevOps-College-Website/commits/main" target="_blank" rel="noreferrer">All commits</a>
+          </div>
+          <ol class="commit-list" id="commit-list">
+            <li class="loading-row">Loading repository history…</li>
+          </ol>
+        </article>
+      </section>
+
+      <section class="two-column">
+        <article class="panel" id="observability">
+          <div class="panel-heading compact"><div><p class="kicker">Service reliability</p><h2>Observability</h2></div></div>
+          <div class="control-list">
+            <div class="control-row"><span class="control-icon success">✓</span><div><strong>Application health endpoint</strong><p><code>/health.json</code> is checked by Docker and this dashboard.</p></div><span class="control-state" id="health-control">Probing</span></div>
+            <div class="control-row"><span class="control-icon configured">◉</span><div><strong>Prometheus metrics</strong><p>Blackbox Exporter probes the container every 15 seconds.</p></div><span class="control-state">Docker profile</span></div>
+            <div class="control-row"><span class="control-icon configured">!</span><div><strong>Availability alert</strong><p>Raises <code>CollegeWebsiteDown</code> after one minute of failure.</p></div><span class="control-state">Configured</span></div>
+          </div>
+        </article>
+
+        <article class="panel" id="security">
+          <div class="panel-heading compact"><div><p class="kicker">Shift-left security</p><h2>Security controls</h2></div></div>
+          <div class="control-list">
+            <div class="control-row"><span class="control-icon success">✓</span><div><strong>CodeQL analysis</strong><p>JavaScript security analysis runs on push, PR and schedule.</p></div><span class="control-state">Automated</span></div>
+            <div class="control-row"><span class="control-icon success">✓</span><div><strong>Dependency audit</strong><p><code>npm audit</code> blocks delivery on high-severity findings.</p></div><span class="control-state">Quality gate</span></div>
+            <div class="control-row"><span class="control-icon success">✓</span><div><strong>Dependabot</strong><p>Tracks GitHub Actions, npm and container updates weekly.</p></div><span class="control-state">Enabled</span></div>
+          </div>
+        </article>
+      </section>
+
+      <section class="panel architecture-panel">
+        <div class="panel-heading compact"><div><p class="kicker">System design</p><h2>Delivery architecture</h2></div></div>
+        <div class="architecture-flow" aria-label="Developer push flows through GitHub, quality gate, container build, security and deployment">
+          <div class="architecture-node"><span>DEV</span><strong>Developer</strong><small>Feature branch</small></div>
+          <div class="flow-line"><span>git push</span></div>
+          <div class="architecture-node"><span>GH</span><strong>GitHub</strong><small>Pull request</small></div>
+          <div class="flow-line"><span>trigger</span></div>
+          <div class="architecture-node"><span>CI</span><strong>Quality gate</strong><small>Validate and test</small></div>
+          <div class="flow-line"><span>approved</span></div>
+          <div class="architecture-node"><span>IMG</span><strong>Container</strong><small>Build and probe</small></div>
+          <div class="flow-line"><span>release</span></div>
+          <div class="architecture-node active"><span>CD</span><strong>Production</strong><small>GitHub Pages</small></div>
+        </div>
+      </section>
+
+      <section class="panel runbook-panel" id="runbook">
+        <div class="panel-heading compact">
+          <div><p class="kicker">Operational readiness</p><h2>Common runbook actions</h2></div>
+          <span class="copy-feedback" id="copy-feedback" aria-live="polite"></span>
+        </div>
+        <div class="command-grid">
+          <article><span class="command-type">Quality</span><h3>Run the complete local gate</h3><code>npm run ci</code><button class="copy-button" data-copy="npm run ci" type="button">Copy command</button></article>
+          <article><span class="command-type">Container</span><h3>Build and start production</h3><code>docker compose up --build website</code><button class="copy-button" data-copy="docker compose up --build website" type="button">Copy command</button></article>
+          <article><span class="command-type">Monitor</span><h3>Start the observability stack</h3><code>docker compose --profile monitoring up --build</code><button class="copy-button" data-copy="docker compose --profile monitoring up --build" type="button">Copy command</button></article>
+          <article><span class="command-type">Recover</span><h3>Inspect and revert a release</h3><code>git revert &lt;commit-sha&gt;</code><button class="copy-button" data-copy="git revert &lt;commit-sha&gt;" type="button">Copy command</button></article>
+        </div>
+      </section>
+
+      <footer class="ops-footer">
+        <p>Asteria College DevOps demonstration · Data refreshes from public operational endpoints.</p>
+        <p class="mono">Repository: Prathameshswami2722/DevOps-College-Website</p>
+      </footer>
+    </main>
+  </div>
+</body>
+</html>

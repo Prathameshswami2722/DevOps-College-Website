@@ -6,6 +6,12 @@
 
 An examination-ready implementation of **Case Study 4: Project Sharing Using GitHub**. It uses a real, data-driven college website to demonstrate source control, team collaboration, automated quality gates, containerisation, continuous deployment, security scanning and monitoring.
 
+## Live project
+
+- College application: [Asteria College](https://prathameshswami2722.github.io/DevOps-College-Website/)
+- Operations dashboard: [DevOps Delivery Control Plane](https://prathameshswami2722.github.io/DevOps-College-Website/devops.html)
+- Source and collaboration: [GitHub repository](https://github.com/Prathameshswami2722/DevOps-College-Website)
+
 > Asteria College is fictional. The repository is an academic DevOps demonstration, not a production college service.
 
 ## What makes this a DevOps project?
@@ -36,6 +42,9 @@ Container -> /health -> Blackbox Exporter -> Prometheus -> availability alert
 - Release identifier generated from the Git commit during each build
 - `/health` endpoint for container and monitoring probes
 - Graceful error state when programme data cannot be loaded
+- Live DevOps dashboard backed by the public GitHub API
+- Current workflow jobs, release, health, pull-request count and commit history
+- Delivery architecture, security controls, observability and copyable runbook commands
 - No framework or runtime dependency required in the browser
 
 ## CI/CD pipeline
@@ -123,6 +132,9 @@ Open a pull request, wait for required checks, request review and merge only whe
 ├── nginx.conf               # Hardened container web server
 ├── package.json             # Standard automation entry points
 ├── index.html               # Application document
+├── devops.html              # Live delivery and operations dashboard
+├── devops.css               # Dashboard visual system
+├── devops.js                # GitHub API and health telemetry client
 ├── style.css                # Responsive visual system
 └── script.js                # Data loading and interaction logic
 ```

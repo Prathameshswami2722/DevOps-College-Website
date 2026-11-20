@@ -10,6 +10,7 @@ test('home page contains semantic sections and accessible navigation', async () 
   assert.match(html, /<nav[^>]+aria-label="Main navigation"/);
   assert.match(html, /id="programmes"/);
   assert.match(html, /id="admissions"/);
+  assert.match(html, /href="devops\.html"/);
 });
 
 test('programme catalogue is structured and unique', async () => {
@@ -25,6 +26,21 @@ test('programme catalogue is structured and unique', async () => {
 test('health document describes a healthy service', async () => {
   const health = JSON.parse(await read('health.json'));
   assert.deepEqual(health, { status: 'ok', service: 'asteria-college-website' });
+});
+
+test('DevOps dashboard exposes live delivery and operations views', async () => {
+  const [html, script, dockerfile] = await Promise.all([
+    read('devops.html'),
+    read('devops.js'),
+    read('Dockerfile')
+  ]);
+  assert.match(html, /id="pipeline-stages"/);
+  assert.match(html, /id="commit-list"/);
+  assert.match(html, /id="environment-grid"/);
+  assert.match(script, /api\.github\.com/);
+  assert.match(script, /actions\/runs/);
+  assert.match(script, /build-info\.json/);
+  assert.match(dockerfile, /devops\.html devops\.css devops\.js/);
 });
 
 test('CI/CD workflow includes test, container and deployment stages', async () => {
